@@ -7,7 +7,7 @@ async function query(queryObject) {
     const result = await client.query(queryObject);
     return result;
   } finally {
-    await client.end();
+    await client?.end();
   }
 }
 
