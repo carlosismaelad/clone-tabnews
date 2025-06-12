@@ -27,6 +27,7 @@
     "dotenv": "16.5.0",
     "dotenv-expand": "12.0.2",
     "next": "15.3.2",
+    "next-connect": "1.0.0",
     "node-pg-migrate": "7.9.1",
     "pg": "8.16.0",
     "react": "19.1.0",
