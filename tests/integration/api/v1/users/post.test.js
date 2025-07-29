@@ -1,5 +1,7 @@
 import { version as uuidVersion } from "uuid";
 import orchestrator from "tests/orchestrator.js";
+import user from "models/user.js";
+import password from "models/password.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -30,13 +32,28 @@ describe("POST /api/v1/users", () => {
         id: responseBody.id,
         username: "johndoe",
         email: "johndoe@email.com",
-        password: "password123",
+        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
+
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBe(NaN);
       expect(Date.parse(responseBody.updated_at)).not.toBe(NaN);
+
+      const userInDatabase = await user.findOneByUsername("johndoe");
+
+      const correctPasswordMatch = await password.compare(
+        "password123",
+        userInDatabase.password,
+      );
+
+      const incorrectPasswordMatch = await password.compare(
+        "incorrectpassword123",
+        userInDatabase.password,
+      );
+      expect(correctPasswordMatch).toBe(true);
+      expect(incorrectPasswordMatch).toBe(false);
     });
 
     test("With duplicated email", async () => {
@@ -73,7 +90,7 @@ describe("POST /api/v1/users", () => {
       expect(response2Body).toEqual({
         name: "ValidationError",
         message: "O e-mail informando já está sendo utilizado.",
-        action: "Utilize outro e-mail para realizar o cadastro.",
+        action: "Utilize outro e-mail para realizar esta operação.",
         status_code: 400,
       });
     });
@@ -112,7 +129,7 @@ describe("POST /api/v1/users", () => {
       expect(response2Body).toEqual({
         name: "ValidationError",
         message: "O username informando já está sendo utilizado.",
-        action: "Utilize outro username para realizar o cadastro.",
+        action: "Utilize outro username para realizar esta operação.",
         status_code: 400,
       });
     });
