@@ -46,7 +46,7 @@ async function createSession(userId) {
   return await session.create(userId);
 }
 
-const orquestrator = {
+const orchestrator = {
   waitForAllServices,
   clearDatabase,
   runPendingMigrations,
@@ -54,4 +54,4 @@ const orquestrator = {
   createSession,
 };
 
-export default orquestrator;
+export default orchestrator;
