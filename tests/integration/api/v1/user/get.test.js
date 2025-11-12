@@ -26,7 +26,7 @@ describe("GET /api/v1/user", () => {
       });
     });
   });
-  describe("Default user", () => {
+  describe("Authenticated user", () => {
     test("With valid session", async () => {
       const createdUser = await orchestrator.createUser({
         username: "UserWithValidSession",
